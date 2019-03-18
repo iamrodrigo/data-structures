@@ -14,26 +14,26 @@ class AVL(object):
         return Node(value)
 
     def rotateRight(self, node):
-        left = node.left
-        leftRightChild = left.right
-        node.left = leftRightChild
-        left.right = node
+        newParent = node.left
+        newParentRightChild = newParent.right
+        node.left = newParentRightChild
+        newParent.right = node
 
         self.retrace(node)
-        self.retrace(left)
+        self.retrace(newParent)
 
-        return left
+        return newParent
 
     def rotateLeft(self, node):
-        right = node.right
-        rightLeftChild = right.left
-        node.right = rightLeftChild
-        right.left = node
+        newParent = node.right
+        newParentLeftChild = newParent.left
+        node.right = newParentLeftChild
+        newParent.left = node
 
         self.retrace(node)
-        self.retrace(right)
+        self.retrace(newParent)
 
-        return right
+        return newParent
 
     def insert(self, value):
         self.root = self.insert_implementation(self.root, value)
@@ -50,19 +50,17 @@ class AVL(object):
         return self.balance(node)
 
     def balance(self, node):
-        balance = self.heightOfChildren(node)
-
-        if balance  > 1:
+        if node.balanceFactor > 1:
             # Right Right
-            if self.heightOfChildren(node.left) >= 0:
+            if node.left.balanceFactor >= 0:
                 node = self.rotateRight(node)
             # Left Right
             else:
                 node.left = self.rotateLeft(node.left)
                 node = self.rotateRight(node)
-        elif balance < -1:
+        elif node.balanceFactor < -1:
             # Left Left
-            if self.heightOfChildren(node.right) <= 0:
+            if node.right.balanceFactor <= 0:
                 node = self.rotateLeft(node)
             # Right Left
             else:
@@ -77,9 +75,6 @@ class AVL(object):
     def retrace(self, node):
         node.height = max(self.height(node.left), self.height(node.right)) + 1
         node.balanceFactor = self.height(node.left)- self.height(node.right)
-
-    def heightOfChildren(self, node):
-        return self.height(node.left) - self.height(node.right)
 
     def search_recursive(self, value):
         return self.search_recursive_implementation(value, self.root)
@@ -146,34 +141,34 @@ a = -1
 avl = AVL()
 
 # RR Insertion
-avl.insert(10) #A
-avl.breadthFirst()
-avl.insert(20) #Ar
-avl.breadthFirst()
-avl.insert(5)  #B
-avl.breadthFirst()
-avl.insert(7)  #Br
-avl.breadthFirst()
-avl.insert(3)  #C
-avl.breadthFirst()
-avl.delete(20)
-avl.breadthFirst()
-#avl.insert(1)  #Cl, balance activated
-#avl.breadthFirst()
-
-#LR Insertion
 #avl.insert(10) #A
 #avl.breadthFirst()
 #avl.insert(20) #Ar
 #avl.breadthFirst()
 #avl.insert(5)  #B
 #avl.breadthFirst()
-#avl.insert(7)  #C
+#avl.insert(7)  #Br
 #avl.breadthFirst()
-#avl.insert(3)  #Bl
+#avl.insert(3)  #C
 #avl.breadthFirst()
-#avl.insert(8)  #Cr, balance activated
+#avl.delete(20)
 #avl.breadthFirst()
+#avl.insert(1)  #Cl, balance activated
+#avl.breadthFirst()
+
+#LR Insertion
+avl.insert(10) #A
+avl.breadthFirst()
+avl.insert(20) #Ar
+avl.breadthFirst()
+avl.insert(5)  #B
+avl.breadthFirst()
+avl.insert(7)  #C
+avl.breadthFirst()
+avl.insert(3)  #Bl
+avl.breadthFirst()
+avl.insert(8)  #Cr, balance activated
+avl.breadthFirst()
 
 #LL Insertion
 #avl.insert(10) #A
